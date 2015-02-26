@@ -8,7 +8,7 @@ import pandas as pd
 import pandas.io.data as web
 
 
-def load_from_yahoo(ticker='SPY', start='1900', adjust_close=False):
+def load_from_yahoo(ticker='SPY', start='1990', end='2005', adjust_close=False):
     """ Loads data from Yahoo. After loading it renames columns to shorter
     format, which is what Backtest expects.
 
@@ -20,10 +20,10 @@ def load_from_yahoo(ticker='SPY', start='1900', adjust_close=False):
     if isinstance(ticker, list):
         return pd.Panel(
             {t: load_from_yahoo(
-                ticker=t, start=start, adjust_close=adjust_close)
+                ticker=t, start=start, end=end, adjust_close=adjust_close)
              for t in ticker})
 
-    data = web.DataReader(ticker, data_source='yahoo', start=start)
+    data = web.get_data_yahoo(ticker, start=start, end=end)
     data = data.rename(columns={'Open': 'O', 'High': 'H', 'Low': 'L',
                                 'Close': 'C', 'Adj Close': 'AC',
                                 'Volume': 'V'})
